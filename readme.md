@@ -57,6 +57,7 @@ This project uses GitHub Actions to automatically build and push Docker images t
 - **On Push to main**: Builds and pushes image with `latest` tag
 - **On Tags**: Builds and pushes image with semantic version tags (e.g., `v1.0.0`)
 - **On Pull Requests**: Builds image for testing (no push to registry)
+- **Package Visibility**: Automatically sets container packages to public
 
 ### Docker Registry
 
@@ -75,6 +76,14 @@ docker pull ghcr.io/your-username/magicfy/magicfy-web:latest
 # Run the pulled image
 docker run -p 5000:8080 ghcr.io/your-username/magicfy/magicfy-web:latest
 ```
+
+### Troubleshooting
+
+If you have issues pulling the Docker image:
+
+1. **Check package visibility**: Go to your GitHub repository → Packages → magicfy-web → Package settings → Change visibility to Public
+2. **Verify image tags**: Check the Actions tab for successful builds and pushed tags
+3. **Login to registry**: If pulling private images: `docker login ghcr.io -u YOUR_USERNAME`
 
 ### Setup
 

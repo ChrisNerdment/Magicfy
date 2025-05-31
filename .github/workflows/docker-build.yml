@@ -53,10 +53,18 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Print image info
+          cache-to: type=gha,mode=max      - name: Print image info
         if: github.event_name != 'pull_request'
         run: |
           echo "Docker image pushed to:"
+          echo "${{ steps.meta.outputs.tags }}"
+          echo ""
+          echo "To pull the image locally:"
+          echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          echo ""
+          echo "To run the container:"
+          echo "docker run -d -p 8080:8080 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          echo ""
+          echo "GitHub Container Registry URL:"
+          echo "https://github.com/${{ github.repository }}/pkgs/container/magicfy-web"
           echo "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
