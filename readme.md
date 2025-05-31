@@ -54,7 +54,7 @@ This project uses GitHub Actions to automatically build and push Docker images t
 
 ### Automatic Builds
 
-- **On Push to main/master**: Builds and pushes image with `latest` tag
+- **On Push to main**: Builds and pushes image with `latest` tag
 - **On Tags**: Builds and pushes image with semantic version tags (e.g., `v1.0.0`)
 - **On Pull Requests**: Builds image for testing (no push to registry)
 
