@@ -6,11 +6,24 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
-    Debug.WriteLine("Hello World from Magicfy.Web Version 2!");
-    Console.WriteLine("Hello World Console from Magicfy.Web Version 2!");
-    return "Hello World from Magicfy.Web Version 2!";
+    return new { message = "Hello World", version = "1.0", timestamp = DateTime.UtcNow };
+});
+app.MapGet("/status", () =>
+{
+    return new
+    {
+        version = "1.0",
+        timestamp = DateTime.UtcNow,
+        appId = Environment.GetEnvironmentVariable("BUNNYNET_MC_APPID"),
+        podId = Environment.GetEnvironmentVariable("BUNNYNET_MC_PODID"),
+        region = Environment.GetEnvironmentVariable("BUNNYNET_MC_REGION"),
+        publicEndpoint = Environment.GetEnvironmentVariable("BUNNYNET_MC_PUBLIC_ENDPOINTS"),
+        podip = Environment.GetEnvironmentVariable("BUNNYNET_MC_PODIP"),
+        hostId = Environment.GetEnvironmentVariable("BUNNYNET_MC_HOSTIP"),
+        zone = Environment.GetEnvironmentVariable("BUNNYNET_MC_ZONE")
+
+    };
 });
 
-app.MapGet("/api/hello", () => new { Message = "Hello World!", Application = "Magicfy.Web", Timestamp = DateTime.Now });
 
 app.Run();
