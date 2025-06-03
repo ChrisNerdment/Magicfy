@@ -26,7 +26,7 @@ app.MapGet("/health", () =>
 
 app.MapGet("/status", () =>
 {
-    var id = Ulid.NewUlid().ToString();
+    var id = PUlid.NewPUlid("W");
     return new
     {
         version = "1.0",
@@ -72,3 +72,23 @@ app.MapGet("/status", () =>
 
 
 app.Run();
+
+
+public static class PUlid
+{
+    /// <summary>
+    /// Erzeugt eine neue Ulid und ersetzt die letzten Zeichen durch die Partition.
+    /// </summary>
+    public static string NewPUlid(string partition)
+    {
+        if (string.IsNullOrEmpty(partition))
+            throw new ArgumentException("Partition darf nicht leer sein.", nameof(partition));
+
+        var ulid = Ulid.NewUlid().ToString();
+        if (partition.Length > ulid.Length)
+            throw new ArgumentException("Partition ist länger als die Ulid.", nameof(partition));
+
+        // Ersetze die letzten Zeichen durch die Partition
+        return ulid.Substring(0, ulid.Length - partition.Length) + partition;
+    }
+}
