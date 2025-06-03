@@ -37,15 +37,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: benjlevesque/short-sha@v3.0
-        id: short-sha
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: ${{ steps.short-sha.outputs.sha }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
 
       - name: Build and push Docker image
         id: push
@@ -54,7 +57,7 @@ jobs:
           context: ./Magicfy.Web
           file: ./Magicfy.Web/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.short-sha.outputs.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Generate artifact attestation
@@ -64,11 +67,12 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-          
+      - uses: benjlevesque/short-sha@v3.0
+        id: short-sha
       - name: Update container image on Magic Containers
         uses: BunnyWay/actions/container-update-image@main
         with:
             app_id: Mks5q6jKToE72EB
             api_key: ${{ secrets.BUNNYNET_API_KEY }}
             container: Container-1
-            image_tag: "main"
+            image_tag: ${{ steps.short-sha.outputs.sha }}
