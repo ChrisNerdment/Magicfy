@@ -9,6 +9,21 @@ app.MapGet("/", () =>
 {
     return new { message = "Hello World", version = "1.0", timestamp = DateTime.UtcNow };
 });
+
+app.MapGet("/health", () =>
+{
+    return new
+    {
+        status = "Healthy",
+        timestamp = DateTime.UtcNow,
+        uptime = TimeSpan.FromMilliseconds(Environment.TickCount64),
+        version = "1.0",
+        environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
+    };
+});
+
+
+
 app.MapGet("/status", () =>
 {
     var id = Ulid.NewUlid().ToString();
