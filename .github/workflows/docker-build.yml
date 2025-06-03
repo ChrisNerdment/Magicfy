@@ -73,4 +73,4 @@ jobs:
             app_id: Mks5q6jKToE72EB
             api_key: ${{ secrets.BUNNYNET_API_KEY }}
             container: Container-1
-            image_tag: "${{ github.sha }}"
+            image_tag: "main"
